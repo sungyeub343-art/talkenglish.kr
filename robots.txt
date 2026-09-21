@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://talkenglish.kr/sitemap.xml
+Sitemap: https://talkenglish.kr/sitemap-neighborhoods.xml

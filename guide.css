@@ -67,6 +67,14 @@ button { color: inherit; font: inherit; }
 .feature p { margin: 0; color: #59615e; line-height: 1.75; word-break: keep-all; }
 .area-note { margin-top: 48px; padding: 28px 30px; background: var(--sky); border: 1px solid var(--ink); line-height: 1.8; word-break: keep-all; }
 .area-note strong { display: block; margin-bottom: 6px; font-size: 18px; }
+.subareas { padding: clamp(65px, 8vw, 100px) 24px; color: var(--white); background: var(--ink); border-top: 1px solid var(--ink); }
+.subareas-inner { max-width: 1072px; margin: auto; }
+.subareas h2 { margin: 0 0 14px; font-size: clamp(30px, 4vw, 46px); word-break: keep-all; }
+.subareas p { margin: 0; color: #c9cfcc; line-height: 1.8; }
+.subarea-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 36px; }
+.subarea-grid a { display: flex; align-items: center; justify-content: space-between; min-height: 60px; padding: 14px 16px; border: 1px solid #65706c; font-weight: 700; transition: color .2s, background .2s; }
+.subarea-grid a::after { content: "\2192"; }
+.subarea-grid a:hover, .subarea-grid a[aria-current="page"] { color: var(--ink); background: var(--lime); border-color: var(--lime); }
 .other-areas { padding: 70px 24px; border-top: 1px solid var(--ink); }
 .other-areas-inner { max-width: 1072px; margin: auto; }
 .other-areas h2 { margin: 0 0 24px; font-size: 28px; }
@@ -94,6 +102,7 @@ button { color: inherit; font: inherit; }
   .feature-grid { grid-template-columns: 1fr; }
   .feature { min-height: auto; border-right: 0; border-bottom: 1px solid var(--ink); }
   .feature:last-child { border-bottom: 0; }
+  .subarea-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .contact { grid-template-columns: 1fr; }
 }
 
@@ -102,6 +111,7 @@ button { color: inherit; font: inherit; }
   .guide-hero h1 { font-size: 44px; }
   .district-grid { grid-template-columns: 1fr; }
   .district-card { min-height: 170px; border-right: 0; }
+  .subarea-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .contact { align-items: stretch; }
   .phone-button { min-width: 0; }
   .site-footer { flex-direction: column; }
