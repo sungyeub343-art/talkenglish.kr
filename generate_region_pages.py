@@ -118,6 +118,11 @@ REGIONS = [
         ("제주시", "jeju-si"), ("서귀포시", "seogwipo-si"),
     ]),
 ]
+DAEJEON_REGION = ("대전", "daejeon", "연구와 행정, 산업이 함께 이어지는 충청권 도시 생활", [
+    ("동구", "dong-gu"), ("중구", "jung-gu"), ("서구", "seo-gu"),
+    ("유성구", "yuseong-gu"), ("대덕구", "daedeok-gu"),
+])
+DIRECTORY_REGIONS = [*REGIONS[:5], DAEJEON_REGION, *REGIONS[5:]]
 
 
 def page_filename(region_slug, area_slug):
@@ -181,19 +186,19 @@ def render_page(region_name, region_slug, context, area_name, area_slug, areas):
 def render_region_directory():
     region_navigation = "".join(
         f'<a href="#region-{region_slug}">{region_name}</a>'
-        for region_name, region_slug, _, _ in REGIONS
+        for region_name, region_slug, _, _ in DIRECTORY_REGIONS
     )
     region_groups = "\n".join(
         f'''        <section class="region-group" id="region-{region_slug}">
           <div class="region-group-heading"><p class="eyebrow">{region_slug.upper()}</p><h3>{region_name}</h3><p>{context}</p></div>
           <div class="region-link-grid">{''.join(f'<a href="{page_filename(region_slug, area_slug)}">{escape(area_name)}</a>' for area_name, area_slug in areas)}</div>
         </section>'''
-        for region_name, region_slug, context, areas in REGIONS
+        for region_name, region_slug, context, areas in DIRECTORY_REGIONS
     )
-    total = sum(len(areas) for _, _, _, areas in REGIONS)
+    total = sum(len(areas) for _, _, _, areas in DIRECTORY_REGIONS)
     return f'''    <section class="region-directory" aria-labelledby="region-directory-title">
       <div class="region-directory-inner">
-        <div class="region-directory-heading"><p class="eyebrow">All Regions</p><h2 id="region-directory-title">전국 시·군·구 한눈에 보기</h2><p>대전을 제외한 {total}개 지역 중 원하는 시·군·구를 선택하세요.</p></div>
+        <div class="region-directory-heading"><p class="eyebrow">All Regions</p><h2 id="region-directory-title">전국 시·군·구 한눈에 보기</h2><p>전국 {total}개 지역 중 원하는 시·군·구를 선택하세요.</p></div>
         <nav class="region-jump" aria-label="권역 바로가기">{region_navigation}</nav>
 {region_groups}
       </div>
@@ -218,7 +223,7 @@ def update_conversation_guide(directory):
 
 
 def render_guide(directory):
-    total = sum(len(areas) for _, _, _, areas in REGIONS)
+    total = sum(len(areas) for _, _, _, areas in DIRECTORY_REGIONS)
     return f'''<!doctype html>
 <html lang="ko">
 <head>
@@ -237,7 +242,7 @@ def render_guide(directory):
   <header class="site-header"><a class="brand" href="index.html" aria-label="파워잉글리쉬 홈"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>파워잉글리쉬</a><nav class="nav-links" id="site-menu" aria-label="주요 메뉴"><a href="index.html#about">교육 철학</a><a href="index.html#program">프로그램</a><a href="conversation-guide.html" aria-current="page">회화 안내</a><a class="nav-cta" href="tel:01029283614">상담 신청</a></nav><button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="site-menu"><span></span></button></header>
   <main id="main">
     <nav class="breadcrumb" aria-label="현재 위치"><a href="index.html">홈</a><span>›</span><a href="conversation-guide.html">회화 안내</a><span>›</span>전국 지역</nav>
-    <section class="guide-hero"><div class="guide-hero-copy"><p class="eyebrow">Korea Conversation Guide</p><h1>전국 시·군·구<br>성인 영어 스피킹 안내</h1><p>사는 곳과 생활 패턴에 맞는 영어 말하기 학습 정보를 찾아보세요. 대전을 제외한 전국 {total}개 시·군·구별 학습 방향을 안내합니다.</p></div><div class="guide-hero-media"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=88" alt="편안하게 영어 대화를 나누는 성인 학습자들"><span class="location-stamp">전국<br>{total}개 지역<br>스피킹 안내</span></div></section>
+    <section class="guide-hero"><div class="guide-hero-copy"><p class="eyebrow">Korea Conversation Guide</p><h1>전국 시·군·구<br>성인 영어 스피킹 안내</h1><p>사는 곳과 생활 패턴에 맞는 영어 말하기 학습 정보를 찾아보세요. 전국 {total}개 시·군·구별 학습 방향을 안내합니다.</p></div><div class="guide-hero-media"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=88" alt="편안하게 영어 대화를 나누는 성인 학습자들"><span class="location-stamp">전국<br>{total}개 지역<br>스피킹 안내</span></div></section>
 {directory}
     <section class="contact"><div><p class="eyebrow">Start Here</p><h2>나에게 맞는 회화 과정,<br>상담부터 시작하세요</h2><p>현재 영어 수준과 배우는 목적을 알려주시면 알맞은 학습 방향을 안내해 드립니다.</p></div><a class="phone-button" href="tel:01029283614">전화 상담<br>010-2928-3614</a></section>
   </main>
