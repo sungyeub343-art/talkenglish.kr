@@ -3,3 +3,4 @@ Allow: /
 
 Sitemap: https://talkenglish.kr/sitemap.xml
 Sitemap: https://talkenglish.kr/sitemap-neighborhoods.xml
+Sitemap: https://talkenglish.kr/sitemap-regions.xml

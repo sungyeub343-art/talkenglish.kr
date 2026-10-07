@@ -31,6 +31,11 @@ class PageParser(HTMLParser):
 root = Path(__file__).parent
 html_files = list(root.glob("*.html"))
 neighborhood_files = list(root.glob("daejeon-*-dong-adult-english-conversation.html"))
+regional_files = [
+    path
+    for path in root.glob("*-adult-english-conversation.html")
+    if not path.name.startswith("daejeon-")
+]
 missing_links = []
 titles = []
 canonicals = []
@@ -50,13 +55,17 @@ for html_file in html_files:
 namespace = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 sitemap = ET.parse(root / "sitemap-neighborhoods.xml")
 sitemap_count = len(sitemap.findall("s:url", namespace))
+region_sitemap = ET.parse(root / "sitemap-regions.xml")
+region_sitemap_count = len(region_sitemap.findall("s:url", namespace))
 
 checks = {
     "neighborhood_pages": len(neighborhood_files) == 82,
+    "regional_pages": len(regional_files) == 224,
     "missing_local_links": not missing_links,
     "unique_titles": len(titles) == len(set(titles)),
-    "neighborhood_canonicals": len(canonicals) >= 82,
+    "unique_canonicals": len(canonicals) == len(set(canonicals)),
     "neighborhood_sitemap_urls": sitemap_count == 82,
+    "regional_sitemap_urls": region_sitemap_count == 225,
 }
 
 for name, passed in checks.items():
