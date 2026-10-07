@@ -178,11 +178,46 @@ def render_page(region_name, region_slug, context, area_name, area_slug, areas):
 '''
 
 
-def render_guide():
-    region_sections = "\n".join(
-        f'''      <section class="subareas"><div class="subareas-inner"><p class="eyebrow">{region_slug.upper()}</p><h2>{region_name} 영어 스피킹 안내</h2><p>{context}에 맞는 지역별 안내를 확인하세요.</p><div class="subarea-grid">{''.join(f'<a href="{page_filename(region_slug, area_slug)}">{escape(area_name)}</a>' for area_name, area_slug in areas)}</div></div></section>'''
+def render_region_directory():
+    region_navigation = "".join(
+        f'<a href="#region-{region_slug}">{region_name}</a>'
+        for region_name, region_slug, _, _ in REGIONS
+    )
+    region_groups = "\n".join(
+        f'''        <section class="region-group" id="region-{region_slug}">
+          <div class="region-group-heading"><p class="eyebrow">{region_slug.upper()}</p><h3>{region_name}</h3><p>{context}</p></div>
+          <div class="region-link-grid">{''.join(f'<a href="{page_filename(region_slug, area_slug)}">{escape(area_name)}</a>' for area_name, area_slug in areas)}</div>
+        </section>'''
         for region_name, region_slug, context, areas in REGIONS
     )
+    total = sum(len(areas) for _, _, _, areas in REGIONS)
+    return f'''    <section class="region-directory" aria-labelledby="region-directory-title">
+      <div class="region-directory-inner">
+        <div class="region-directory-heading"><p class="eyebrow">All Regions</p><h2 id="region-directory-title">전국 시·군·구 한눈에 보기</h2><p>대전을 제외한 {total}개 지역 중 원하는 시·군·구를 선택하세요.</p></div>
+        <nav class="region-jump" aria-label="권역 바로가기">{region_navigation}</nav>
+{region_groups}
+      </div>
+    </section>'''
+
+
+def update_conversation_guide(directory):
+    guide_path = ROOT / "conversation-guide.html"
+    source = guide_path.read_text(encoding="utf-8")
+    start_marker = "    <!-- REGIONAL_DIRECTORY_START -->"
+    end_marker = "    <!-- REGIONAL_DIRECTORY_END -->"
+    before, separator, remainder = source.partition(start_marker)
+    if not separator:
+        raise RuntimeError("Missing regional directory start marker in conversation-guide.html.")
+    _, separator, after = remainder.partition(end_marker)
+    if not separator:
+        raise RuntimeError("Missing regional directory end marker in conversation-guide.html.")
+    guide_path.write_text(
+        f"{before}{start_marker}\n{directory}\n{end_marker}{after}",
+        encoding="utf-8",
+    )
+
+
+def render_guide(directory):
     total = sum(len(areas) for _, _, _, areas in REGIONS)
     return f'''<!doctype html>
 <html lang="ko">
@@ -203,7 +238,7 @@ def render_guide():
   <main id="main">
     <nav class="breadcrumb" aria-label="현재 위치"><a href="index.html">홈</a><span>›</span><a href="conversation-guide.html">회화 안내</a><span>›</span>전국 지역</nav>
     <section class="guide-hero"><div class="guide-hero-copy"><p class="eyebrow">Korea Conversation Guide</p><h1>전국 시·군·구<br>성인 영어 스피킹 안내</h1><p>사는 곳과 생활 패턴에 맞는 영어 말하기 학습 정보를 찾아보세요. 대전을 제외한 전국 {total}개 시·군·구별 학습 방향을 안내합니다.</p></div><div class="guide-hero-media"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=88" alt="편안하게 영어 대화를 나누는 성인 학습자들"><span class="location-stamp">전국<br>{total}개 지역<br>스피킹 안내</span></div></section>
-{region_sections}
+{directory}
     <section class="contact"><div><p class="eyebrow">Start Here</p><h2>나에게 맞는 회화 과정,<br>상담부터 시작하세요</h2><p>현재 영어 수준과 배우는 목적을 알려주시면 알맞은 학습 방향을 안내해 드립니다.</p></div><a class="phone-button" href="tel:01029283614">전화 상담<br>010-2928-3614</a></section>
   </main>
   <footer class="site-footer"><div><a class="footer-brand" href="index.html">파워잉글리쉬</a><p class="footer-meta">교육문의 010-2928-3614<br>© 2026 파워잉글리쉬. All rights reserved.</p></div><div class="footer-links"><a href="index.html">홈</a><a href="conversation-guide.html">회화 안내</a></div></footer>
@@ -226,7 +261,9 @@ for region_name, region_slug, context, areas in REGIONS:
 if len(pages) != 224 or len(set(pages)) != len(pages):
     raise RuntimeError(f"Expected 224 unique regional pages, found {len(set(pages))}.")
 
-(ROOT / "regional-conversation-guide.html").write_text(render_guide(), encoding="utf-8")
+directory = render_region_directory()
+update_conversation_guide(directory)
+(ROOT / "regional-conversation-guide.html").write_text(render_guide(directory), encoding="utf-8")
 sitemap_urls = "\n".join(
     f"  <url>\n    <loc>https://talkenglish.kr/{page}</loc>\n    <lastmod>{LAST_MODIFIED}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>"
     for page in ["regional-conversation-guide.html", *pages]
