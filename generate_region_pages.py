@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).parent
-LAST_MODIFIED = "2026-10-07"
+LAST_MODIFIED = "2026-10-12"
 REGIONS = [
     ("서울", "seoul", "직장과 일상이 빠르게 이어지는 수도권 생활", [
         ("종로구", "jongno-gu"), ("중구", "jung-gu"), ("용산구", "yongsan-gu"),
@@ -129,6 +129,10 @@ def page_filename(region_slug, area_slug):
     return f"{region_slug}-{area_slug}-adult-english-conversation.html"
 
 
+def render_goal_links():
+    return '''<a href="beginner-adult-english-conversation.html">왕초보 영어회화</a><a href="office-worker-english-conversation.html">직장인 영어회화</a><a href="travel-english-conversation.html">여행 영어회화</a><a href="business-english-conversation.html">비즈니스 영어</a>'''
+
+
 def render_page(region_name, region_slug, context, area_name, area_slug, areas):
     filename = page_filename(region_slug, area_slug)
     nearby_links = "".join(
@@ -142,8 +146,8 @@ def render_page(region_name, region_slug, context, area_name, area_slug, areas):
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{region_name} {area_name} 성인 영어 스피킹 안내. 일상, 여행, 업무에 필요한 실용 영어회화 학습 방향과 상담 정보를 확인하세요.">
-  <title>{region_name} {area_name} 성인 영어 스피킹·영어회화 안내 | 파워잉글리쉬</title>
+  <meta name="description" content="{region_name} {area_name} 성인 영어회화 안내. 왕초보 기초회화부터 직장인, 여행, 비즈니스 영어까지 목적별 말하기 학습 방향을 확인하세요.">
+  <title>{region_name} {area_name} 성인 영어회화·직장인 영어 | 파워잉글리쉬</title>
   <link rel="canonical" href="https://talkenglish.kr/{filename}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -160,7 +164,7 @@ def render_page(region_name, region_slug, context, area_name, area_slug, areas):
   <main id="main">
     <nav class="breadcrumb" aria-label="현재 위치"><a href="index.html">홈</a><span>›</span><a href="conversation-guide.html">회화 안내</a><span>›</span><a href="regional-conversation-guide.html">전국 지역</a><span>›</span>{region_name} {area_name}</nav>
     <section class="guide-hero">
-      <div class="guide-hero-copy"><p class="eyebrow">{area_slug.replace('-', ' ')} · {region_slug}</p><h1>{region_name} {area_name}<br>성인 영어 스피킹 안내</h1><p>{context}에 맞춰 영어 말하기를 시작해 보세요. 현재 수준과 목표를 확인하고 일상, 여행, 업무에서 실제로 사용할 표현을 중심으로 학습 방향을 안내합니다.</p></div>
+      <div class="guide-hero-copy"><p class="eyebrow">{area_slug.replace('-', ' ')} · {region_slug}</p><h1>{region_name} {area_name}<br>성인 영어회화 안내</h1><p>{context}에 맞춰 영어 말하기를 시작해 보세요. 왕초보 기초회화부터 직장인 영어, 여행 회화와 비즈니스 영어까지 현재 수준과 목표에 맞는 학습 방향을 안내합니다.</p></div>
       <div class="guide-hero-media"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=88" alt="함께 영어 대화를 연습하는 성인 학습자들"><span class="location-stamp">{region_name}<br>{area_name}<br>스피킹 안내</span></div>
     </section>
     <section class="details">
@@ -172,6 +176,7 @@ def render_page(region_name, region_slug, context, area_name, area_slug, areas):
       </div>
       <div class="area-note"><strong>{region_name} {area_name} 영어회화 안내</strong>{area_name} 거주자와 직장인 등 지역 생활권의 성인 학습자를 위한 안내입니다. 상담을 통해 현재 영어 수준과 목표에 맞는 학습 방향을 확인할 수 있습니다.</div>
     </section>
+    <section class="goal-links"><div class="goal-links-inner"><p class="eyebrow">Choose Your Goal</p><h2>목적으로 찾는 영어회화</h2><p>지금 영어가 필요한 이유에 맞춰 학습 안내를 확인하세요.</p><div class="goal-link-grid">{render_goal_links()}</div></div></section>
     <section class="subareas"><div class="subareas-inner"><p class="eyebrow">Nearby Areas</p><h2>{region_name} 다른 시·군·구 안내</h2><p>{region_name}의 다른 지역 영어 스피킹 안내도 함께 확인하세요.</p><div class="subarea-grid">{nearby_links}</div></div></section>
     <section class="other-areas"><div class="other-areas-inner"><h2>전국 지역별 회화 안내</h2><div class="area-links"><a href="regional-conversation-guide.html">전국 시·군·구 보기</a><a href="conversation-guide.html">대전 지역 보기</a></div></div></section>
     <section class="contact"><div><p class="eyebrow">Start Here</p><h2>영어로 말하는 습관,<br>지금 시작하세요</h2><p>현재 수준과 학습 목적을 알려주시면 알맞은 회화 학습 방향을 안내해 드립니다.</p></div><a class="phone-button" href="tel:01029283614">전화 상담<br>010-2928-3614</a></section>
@@ -229,8 +234,8 @@ def render_guide(directory):
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="서울, 경기, 부산, 인천 등 전국 {total}개 시·군·구 성인 영어 스피킹 및 영어회화 학습 안내를 확인하세요.">
-  <title>전국 시·군·구 성인 영어 스피킹 안내 | 파워잉글리쉬</title>
+  <meta name="description" content="전국 {total}개 시·군·구 성인 영어회화 안내. 왕초보, 직장인, 여행, 비즈니스 영어 등 지역과 목적에 맞는 말하기 학습 정보를 확인하세요.">
+  <title>전국 성인 영어회화·직장인 영어 지역 안내 | 파워잉글리쉬</title>
   <link rel="canonical" href="https://talkenglish.kr/regional-conversation-guide.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -242,7 +247,8 @@ def render_guide(directory):
   <header class="site-header"><a class="brand" href="index.html" aria-label="파워잉글리쉬 홈"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>파워잉글리쉬</a><nav class="nav-links" id="site-menu" aria-label="주요 메뉴"><a href="index.html#about">교육 철학</a><a href="index.html#program">프로그램</a><a href="conversation-guide.html" aria-current="page">회화 안내</a><a class="nav-cta" href="tel:01029283614">상담 신청</a></nav><button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="site-menu"><span></span></button></header>
   <main id="main">
     <nav class="breadcrumb" aria-label="현재 위치"><a href="index.html">홈</a><span>›</span><a href="conversation-guide.html">회화 안내</a><span>›</span>전국 지역</nav>
-    <section class="guide-hero"><div class="guide-hero-copy"><p class="eyebrow">Korea Conversation Guide</p><h1>전국 시·군·구<br>성인 영어 스피킹 안내</h1><p>사는 곳과 생활 패턴에 맞는 영어 말하기 학습 정보를 찾아보세요. 전국 {total}개 시·군·구별 학습 방향을 안내합니다.</p></div><div class="guide-hero-media"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=88" alt="편안하게 영어 대화를 나누는 성인 학습자들"><span class="location-stamp">전국<br>{total}개 지역<br>스피킹 안내</span></div></section>
+    <section class="guide-hero"><div class="guide-hero-copy"><p class="eyebrow">Korea Conversation Guide</p><h1>전국 시·군·구<br>성인 영어회화 안내</h1><p>사는 곳과 생활 패턴에 맞는 영어 말하기 학습 정보를 찾아보세요. 왕초보부터 직장인, 여행, 비즈니스 회화까지 전국 {total}개 지역별 학습 방향을 안내합니다.</p></div><div class="guide-hero-media"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=88" alt="편안하게 영어 대화를 나누는 성인 학습자들"><span class="location-stamp">전국<br>{total}개 지역<br>회화 안내</span></div></section>
+    <section class="goal-links"><div class="goal-links-inner"><p class="eyebrow">Choose Your Goal</p><h2>목적으로 찾는 영어회화</h2><p>현재 수준과 영어가 필요한 장면에 맞는 안내부터 살펴보세요.</p><div class="goal-link-grid">{render_goal_links()}</div></div></section>
 {directory}
     <section class="contact"><div><p class="eyebrow">Start Here</p><h2>나에게 맞는 회화 과정,<br>상담부터 시작하세요</h2><p>현재 영어 수준과 배우는 목적을 알려주시면 알맞은 학습 방향을 안내해 드립니다.</p></div><a class="phone-button" href="tel:01029283614">전화 상담<br>010-2928-3614</a></section>
   </main>

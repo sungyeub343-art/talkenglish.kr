@@ -31,10 +31,16 @@ class PageParser(HTMLParser):
 root = Path(__file__).parent
 html_files = list(root.glob("*.html"))
 neighborhood_files = list(root.glob("daejeon-*-dong-adult-english-conversation.html"))
+topic_files = [
+    root / "beginner-adult-english-conversation.html",
+    root / "office-worker-english-conversation.html",
+    root / "travel-english-conversation.html",
+    root / "business-english-conversation.html",
+]
 regional_files = [
     path
     for path in root.glob("*-adult-english-conversation.html")
-    if not path.name.startswith("daejeon-")
+    if not path.name.startswith("daejeon-") and path not in topic_files
 ]
 missing_links = []
 titles = []
@@ -61,6 +67,7 @@ region_sitemap_count = len(region_sitemap.findall("s:url", namespace))
 checks = {
     "neighborhood_pages": len(neighborhood_files) == 82,
     "regional_pages": len(regional_files) == 224,
+    "topic_pages": all(path.exists() for path in topic_files),
     "missing_local_links": not missing_links,
     "unique_titles": len(titles) == len(set(titles)),
     "unique_canonicals": len(canonicals) == len(set(canonicals)),
